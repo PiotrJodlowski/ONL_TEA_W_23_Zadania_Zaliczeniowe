@@ -12,6 +12,7 @@ Scenario Outline: Purchase test at Mystore Test Lab
     Then Verify address results with <alias>, <address>, <city>, <postal>, <phone>
     Then Choose Shipping Method PrestaShop
     Then Choose Payment Pay by Check
+    When Order is confirmed check order status
     And close browser
 
     Examples:

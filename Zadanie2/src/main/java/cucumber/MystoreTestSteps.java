@@ -8,7 +8,6 @@ import org.apache.commons.io.FileUtils;
 import org.assertj.core.api.Assertions;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,12 +15,14 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
 
 
 public class MystoreTestSteps {
 
     private WebDriver driver;  //WAZNE!!! Musi być ustawiona zmienna poza metodami, żeby przekazywały sobie wartość
+    private String orderReference;
+    private String priceTotal;
 
         @Given("an open browser with Mystore Test Lab")
         public void openMyStore(){
@@ -153,11 +154,37 @@ public class MystoreTestSteps {
                     .until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='payment-confirmation']/div[1]/button")));
             element4.click();
 
-            // screenshot
+            // pobranie zmiennej orderReference z listy orderDetails
+            List<WebElement> orderDetails = driver.findElements(By.xpath("//*[@id='order-details']/ul/li"));
+            orderReference = orderDetails.get(0).getText();
+            orderReference = orderReference.substring(17,26);
+
+            // pobranie ceny do porównania
+            List <WebElement> price = driver.findElements(By.xpath("//*[@id='order-items']/div/table/tbody/tr[3]/td[2]"));
+            priceTotal = price.get(0).getText();
+
+            // strzał screenshota
             File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
             FileUtils.copyFile(scrFile, new File("f:/screenshot.png"));
          }
 
+         @When ("Order is confirmed check order status")
+         public void checkStatus(){
+            WebElement element = driver.findElement(By.xpath("//a[@title='View my customer account']"));
+            element.click();
+            WebElement element2 = driver.findElement(By.id("history-link"));
+            element2.click();
+            //pobranie stringa ze statusem zamówienia
+            List<WebElement> orderHistory = driver.findElements(By.xpath("//*[@id='content']/table/tbody/tr"));
+            String fullString = (orderHistory.get(0).getText()); //pełny string
+            String orderString = (orderHistory.get(0).getText()).substring(0,9);  //string z kodem zamówienia. Pierwsze 10 znaków
+            String statusString = (orderHistory.get(0).getText()).substring(21,fullString.length()); //string ze statusem od 21 znaku do końca
+
+            Assertions.assertThat(orderReference).isEqualTo(orderString); //porównanie OrderReferenców
+
+            //porównanie ceny i statusu zamówienia
+            Assertions.assertThat(statusString).isEqualTo(priceTotal+" Payments by check Awaiting check payment - Details Reorder"); // porównanie statusu i ceny
+         }
 
 
           @And("close browser")
