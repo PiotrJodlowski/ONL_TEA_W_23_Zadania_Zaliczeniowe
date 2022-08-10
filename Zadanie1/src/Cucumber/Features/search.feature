@@ -1,6 +1,6 @@
-Feature: Google search
+Feature: Mystore Test
 
-Scenario Outline: Create new user at Mystore Test Lab
+Scenario Outline: Add Address and verify it at Mystore Test Lab
 
     Given an open browser with Mystore Test Lab
     Then SignIn icon is clicked
@@ -11,7 +11,9 @@ Scenario Outline: Create new user at Mystore Test Lab
     When No address message is displayed click Create new address
     Then Fill up New address form with <alias>, <address>, <city>, <postal>, <phone>
     When Address is created verify results with <alias>, <address>, <city>, <postal>, <phone>
-#    And close browser
+    When Address is verified delete it
+    Then Confirm Address is deleted
+    And close browser
 
     Examples:
     |alias |address | city  |  postal    |  phone     |

@@ -1,5 +1,6 @@
 package cucumber;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -127,12 +128,22 @@ public class MystoreTestSteps {
             Assertions.assertThat(actualText).isEqualTo("Maciej Rogalski\n"+address+"\n"+city+"\n"+postal+"\n"+"United Kingdom\n"+phone);
         }
 
+        @When("Address is verified delete it")
+        public void deleteAddress() {
+            WebElement element = driver.findElement(By.xpath("//span[contains(text(),'Delete')]"));
+            element.click();
+        }
 
-//
-//      @And("close browser")
-//        public void closeBrowser() {
-//            driver.quit();
-//        }
+        @Then("Confirm Address is deleted")
+        public void confirmDelete(){
+            WebElement element = driver.findElement(By.xpath("(//article[@role='alert'])[1]"));
+            Assertions.assertThat("Address successfully deleted!").isEqualTo(element.getText());
+        }
+
+      @And("close browser")
+        public void closeBrowser() {
+            driver.quit();
+        }
 
     }
 
