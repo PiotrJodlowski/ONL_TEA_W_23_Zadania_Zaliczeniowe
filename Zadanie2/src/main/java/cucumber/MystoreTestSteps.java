@@ -36,9 +36,9 @@ public class MystoreTestSteps {
 
        @Then("SignIn icon is clicked")
         public void clickSignIn(){
-                WebElement element = driver.findElement(By.xpath("//*[@id='_desktop_user_info']/div/a/span"));
-                element.click();
-    }
+                WebElement signInIcon = driver.findElement(By.xpath("//*[@id='_desktop_user_info']/div/a/span"));
+                signInIcon.click();
+        }
 
         @When("Login Page is loaded login to store")
         public void logIN() {
@@ -65,41 +65,41 @@ public class MystoreTestSteps {
 
         @When("Click Addresses")
         public void clickAddresses() {
-            WebElement element = new WebDriverWait(driver, Duration.ofSeconds(30))
+            WebElement addressFooter = new WebDriverWait(driver, Duration.ofSeconds(30))
                     .until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='footer_account_list']/li[4]/a")));
-            element.click();
+            addressFooter.click();
         }
 
         @When("No address message is displayed click Create new address")
         public void createAddress(){
             // WebElement element = new WebDriverWait(driver, Duration.ofSeconds(20))
             //        .until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/main/section/div/div/section/section/div[2]/a")));
-            WebElement element = driver.findElement(By.xpath("/html/body/main/section/div/div/section/section/div[2]/a"));
-            element.click();
+            WebElement createAddress = driver.findElement(By.xpath("/html/body/main/section/div/div/section/section/div[2]/a"));
+            createAddress.click();
         }
 
         @Then("^Fill up New address form with (.*), (.*), (.*), (.*), (.*)")
         public void newAddress(String alias, String address, String city, String postal, String phone){
-            WebElement element6 = driver.findElement(By.name("alias"));
-            element6.sendKeys(alias);
-            WebElement element = driver.findElement(By.name("address1"));
-            element.sendKeys(address);
-            WebElement element2 = driver.findElement(By.name("postcode"));
-            element2.sendKeys(postal);
-            WebElement element3 = driver.findElement(By.xpath("//select[@name='id_country']/*[@value='17']"));
-            element3.click();
-            WebElement element4 = driver.findElement(By.name("city"));
-            element4.sendKeys(city);
-            WebElement element7 = driver.findElement(By.name("phone"));
-            element7.sendKeys(phone);
-            WebElement element5 = driver.findElement(By.xpath("//section[@id='content']/div/div/form/footer/button"));
-            element5.click();
+            WebElement element = driver.findElement(By.name("alias"));
+            element.sendKeys(alias);
+            WebElement element2 = driver.findElement(By.name("address1"));
+            element2.sendKeys(address);
+            WebElement element3 = driver.findElement(By.name("postcode"));
+            element3.sendKeys(postal);
+            WebElement element4 = driver.findElement(By.xpath("//select[@name='id_country']/*[@value='17']"));
+            element4.click();
+            WebElement element5 = driver.findElement(By.name("city"));
+            element5.sendKeys(city);
+            WebElement element6 = driver.findElement(By.name("phone"));
+            element6.sendKeys(phone);
+            WebElement element7 = driver.findElement(By.xpath("//section[@id='content']/div/div/form/footer/button"));
+            element7.click();
         }
 
         @Then("^Verify address results with (.*), (.*), (.*), (.*), (.*)")
             public void verifyData(String alias, String address, String city, String postal, String phone){
 
-            List<WebElement> searchResults = driver.findElements(By.xpath("//*[@id=\"id-address-delivery-address-27406\"]/header/label/div"));
+            List<WebElement> searchResults = driver.findElements(By.xpath("//*[@id='id-address-delivery-address-27406']/header/label/div"));
             String actualText = searchResults.get(0).getText();
             Assertions.assertThat(actualText).isEqualTo("Maciej Rogalski\n"+address+"\n"+city+"\n"+postal+"\n"+"United Kingdom\n"+phone);
         }
@@ -112,7 +112,7 @@ public class MystoreTestSteps {
 
             WebElement element2 = driver.findElement(By.xpath("//*[@id='js-product-list']/div[1]/article[2]/div/div[1]/h2/a"));
             element2.click();
-            WebElement element3 = driver.findElement(By.xpath ("//select[@id='group_1']/option[@title='"+Size+"']"));
+            WebElement element3 = driver.findElement(By.xpath ("//select[@id='group_1']/option[@title='"+Size+"']")); //wprowadzenie ziennej do xpatha
             element3.click();
             WebElement element4 = driver.findElement(By.name("qty"));
             element4.clear();
@@ -133,7 +133,7 @@ public class MystoreTestSteps {
             WebElement element2 = driver.findElement(By.id("checkout-delivery-step"));
             element2.click();
             WebElement element = driver.findElement(By.id("delivery_option_1"));
-            if (element.isSelected()){}
+            if (element.isSelected()){}   //sprawdzenie czy już jest zaznaczone
             else element.click();
         }
 
@@ -144,7 +144,7 @@ public class MystoreTestSteps {
             element2.click();
 
             WebElement element = driver.findElement(By.id("payment-option-1"));
-            if (element.isSelected()){}
+            if (element.isSelected()){}  //sprawdzenie czy już jest zaznaczone
             else element.click();
 
             WebElement element3 = driver.findElement(By.id("conditions_to_approve[terms-and-conditions]"));
@@ -157,9 +157,9 @@ public class MystoreTestSteps {
             // pobranie zmiennej orderReference z listy orderDetails
             List<WebElement> orderDetails = driver.findElements(By.xpath("//*[@id='order-details']/ul/li"));
             orderReference = orderDetails.get(0).getText();
-            orderReference = orderReference.substring(17,26);
+            orderReference = orderReference.substring(17,26);  //wyodrębnienie numeru zamówienia
 
-            // pobranie ceny do porównania
+            // pobranie ceny do zmiennej priceTotal
             List <WebElement> price = driver.findElements(By.xpath("//*[@id='order-items']/div/table/tbody/tr[3]/td[2]"));
             priceTotal = price.get(0).getText();
 
@@ -170,20 +170,21 @@ public class MystoreTestSteps {
 
          @When ("Order is confirmed check order status")
          public void checkStatus(){
-            WebElement element = driver.findElement(By.xpath("//a[@title='View my customer account']"));
-            element.click();
-            WebElement element2 = driver.findElement(By.id("history-link"));
-            element2.click();
+            WebElement ikonaKlienta = driver.findElement(By.xpath("//a[@title='View my customer account']"));
+            ikonaKlienta.click();
+            WebElement historyLink = driver.findElement(By.id("history-link"));
+            historyLink.click();
+
             //pobranie stringa ze statusem zamówienia
-            List<WebElement> orderHistory = driver.findElements(By.xpath("//*[@id='content']/table/tbody/tr"));
-            String fullString = (orderHistory.get(0).getText()); //pełny string
-            String orderString = (orderHistory.get(0).getText()).substring(0,9);  //string z kodem zamówienia. Pierwsze 10 znaków
-            String statusString = (orderHistory.get(0).getText()).substring(21,fullString.length()); //string ze statusem od 21 znaku do końca
+             WebElement orderHistory = driver.findElement(By.xpath("//*[@id='content']/table/tbody/tr"));
+             String fullString = orderHistory.getText(); //pełny string
+             String orderString = (orderHistory.getText()).substring(0,9);  //string z kodem zamówienia. Pierwsze 10 znaków
+             String statusString = (orderHistory.getText()).substring(21,fullString.length()); //string ze statusem od 21 znaku do końca
 
-            Assertions.assertThat(orderReference).isEqualTo(orderString); //porównanie OrderReferenców
-
+             //ASSERTIONS:
+             Assertions.assertThat(orderReference).isEqualTo(orderString); //porównanie kodów zamówienia
             //porównanie ceny i statusu zamówienia
-            Assertions.assertThat(statusString).isEqualTo(priceTotal+" Payments by check Awaiting check payment - Details Reorder"); // porównanie statusu i ceny
+             Assertions.assertThat(statusString).isEqualTo(priceTotal+" Payments by check Awaiting check payment - Details Reorder"); // porównanie statusu i ceny
          }
 
 
