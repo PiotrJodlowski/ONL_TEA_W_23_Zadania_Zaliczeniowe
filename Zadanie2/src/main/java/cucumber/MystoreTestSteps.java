@@ -66,15 +66,13 @@ public class MystoreTestSteps {
         @When("Click Addresses")
         public void clickAddresses() {
             WebElement addressFooter = new WebDriverWait(driver, Duration.ofSeconds(30))
-                    .until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='footer_account_list']/li[4]/a")));
+                    .until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Addresses')]")));
             addressFooter.click();
         }
 
         @When("No address message is displayed click Create new address")
         public void createAddress(){
-            // WebElement element = new WebDriverWait(driver, Duration.ofSeconds(20))
-            //        .until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/main/section/div/div/section/section/div[2]/a")));
-            WebElement createAddress = driver.findElement(By.xpath("/html/body/main/section/div/div/section/section/div[2]/a"));
+            WebElement createAddress = driver.findElement(By.xpath("//span[contains(text(),'Create new address')]"));
             createAddress.click();
         }
 
@@ -98,10 +96,12 @@ public class MystoreTestSteps {
 
         @Then("^Verify address results with (.*), (.*), (.*), (.*), (.*)")
             public void verifyData(String alias, String address, String city, String postal, String phone){
+            WebElement delButton = new WebDriverWait(driver, Duration.ofSeconds(30))
+                    .until(ExpectedConditions.elementToBeClickable(By.xpath("//body/section[@id='wrapper']/div[1]/section[1]/div[1]/div[1]/section[2]/div[1]/div[1]/form[1]/div[1]/article[1]/footer[1]/a[2]")));
 
-            List<WebElement> searchResults = driver.findElements(By.xpath("//*[@id='id-address-delivery-address-27406']/header/label/div"));
+            List<WebElement> searchResults = driver.findElements(By.xpath(" //header/label[1]"));
             String actualText = searchResults.get(0).getText();
-            Assertions.assertThat(actualText).isEqualTo("Maciej Rogalski\n"+address+"\n"+city+"\n"+postal+"\n"+"United Kingdom\n"+phone);
+            Assertions.assertThat(actualText).isEqualTo(alias+"\n"+"Maciej Rogalski\n"+address+"\n"+city+"\n"+postal+"\n"+"United Kingdom\n"+phone);
         }
 
         @Then("^Go to clothes in store and buy Hummingbird Printed Sweater (.*) and (.*)")
@@ -130,8 +130,15 @@ public class MystoreTestSteps {
 
         @Then ("Choose Shipping Method PrestaShop")
         public void chooseShippingMethod(){
-            WebElement element2 = driver.findElement(By.id("checkout-delivery-step"));
+
+            WebElement element2 = new WebDriverWait(driver, Duration.ofSeconds(30))
+                    .until(ExpectedConditions.elementToBeClickable(By.id("checkout-delivery-step")));
             element2.click();
+
+//          WebElement element2 = new WebDriverWait(driver, Duration.ofSeconds(30))
+//                    .until(ExpectedConditions.elementToBeClickable(By.xpath("//body/section[@id='wrapper']/div[1]/section[1]/div[1]/div[1]/section[3]/h1[1]")));
+//          element2.click();
+
             WebElement element = driver.findElement(By.id("delivery_option_1"));
             if (element.isSelected()){}   //sprawdzenie czy już jest zaznaczone
             else element.click();
